@@ -53,7 +53,7 @@
                 <div class="flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border border-amber-100">
                     <div>
                         <h2 class="font-bold text-base sm:text-lg text-slate-800">每日飲食與分量記錄</h2>
-                        <p class="text-xs text-slate-500">自由新增三餐與份量，輕鬆掌控外食！</p>
+                        <p class="text-xs text-slate-500">自由新增時段與份量，輕鬆掌控外食！</p>
                     </div>
                     <button @click="openModal('record')" class="bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm flex items-center gap-2 shadow-md transition active:scale-95">
                         <i data-lucide="plus" class="w-4 h-4"></i> 新增飲食
@@ -135,32 +135,34 @@
             <div v-show="activeTab === 'checkin'" class="space-y-6">
                 <div class="flex justify-between items-center bg-white p-5 rounded-2xl shadow-sm border border-amber-100">
                     <div>
-                        <h2 class="font-bold text-base sm:text-lg text-slate-800">9大指標每日自檢表</h2>
-                        <p class="text-xs text-slate-500">每天檢視睡眠、壓力與身體狀態，保持最佳狀態！</p>
+                        <h2 class="font-bold text-base sm:text-lg text-slate-800">每日自檢表</h2>
+                        <p class="text-xs text-slate-500">記錄每日飲食、水分、睡眠與身體狀態！</p>
                     </div>
                     <button @click="openModal('checkin')" class="bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600 text-white px-4 py-2.5 rounded-xl font-medium text-xs sm:text-sm flex items-center gap-2 shadow-md transition active:scale-95">
                         <i data-lucide="plus" class="w-4 h-4"></i> 新增今日自檢
                     </button>
                 </div>
 
-                <div class="space-y-3">
+                <div class="space-y-4">
                     <div v-for="chk in checkinRecords" :key="chk.id" class="bg-white rounded-2xl p-5 shadow-sm border border-amber-100 space-y-3">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between items-center border-b border-amber-100 pb-2">
                             <span class="bg-rose-100 text-rose-800 font-bold text-xs px-3 py-1 rounded-lg">{{ chk.date }}</span>
                             <button @click="deleteCheckinRecord(chk.id)" class="text-slate-300 hover:text-rose-600 p-1">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
-                            <div class="bg-amber-50 p-2 rounded-xl">🥗 飲食達標: <strong class="text-amber-800">{{ chk.diet ? '是' : '否' }}</strong></div>
-                            <div class="bg-amber-50 p-2 rounded-xl">💧 水分達標: <strong class="text-amber-800">{{ chk.water ? '是' : '否' }}</strong></div>
-                            <div class="bg-purple-50 p-2 rounded-xl">🔥 邪惡食物: <strong class="text-purple-800">{{ chk.evilFood ? '有' : '無' }}</strong></div>
-                            <div class="bg-pink-50 p-2 rounded-xl">🍷 聚餐: <strong class="text-pink-800">{{ chk.gathering ? '有' : '無' }}</strong></div>
-                            <div class="bg-blue-50 p-2 rounded-xl">💤 睡眠: <strong class="text-blue-800">{{ chk.sleepHours }} 小時</strong></div>
-                            <div class="bg-slate-50 p-2 rounded-xl">⚡ 壓力: <strong class="text-slate-800">{{ chk.stress }}分</strong></div>
-                            <div class="bg-slate-50 p-2 rounded-xl">🔋 疲勞: <strong class="text-slate-800">{{ chk.fatigue }}分</strong></div>
-                            <div class="bg-emerald-50 p-2 rounded-xl">💩 便便: <strong class="text-emerald-800">{{ chk.poop ? '順暢' : '不順' }}</strong></div>
-                            <div class="bg-cyan-50 p-2 rounded-xl">🌊 水腫: <strong class="text-cyan-800">{{ chk.bloating ? '有' : '無' }}</strong></div>
+                        <!-- 仿照妳提供的乾淨呈現格式 -->
+                        <div class="text-xs space-y-2 text-slate-700 leading-relaxed font-medium">
+                            <div>飲食：目標 {{ chk.dietGoal || '3/3/4' }}；總量: {{ chk.dietTotal || '4/2/2' }}</div>
+                            <div>水：{{ chk.waterMl || 2000 }} ml</div>
+                            <div>是否邪惡食物：{{ chk.evilFoodText || (chk.evilFood ? '是' : '否') }}</div>
+                            <div>是否聚餐：{{ chk.gatheringText || (chk.gathering ? '是' : '否') }}</div>
+                            <div>前一天睡眠狀況：{{ chk.sleepHours }} 小時</div>
+                            <div>壓力狀況：{{ chk.stress }}分</div>
+                            <div>疲勞狀況：{{ chk.fatigue }}分</div>
+                            <div>便便狀況：{{ chk.poopStatus || '1次' }}</div>
+                            <div>水腫狀況：{{ chk.bloatingStatus || '無' }}</div>
+                            <div>飽足感狀況：{{ chk.fullness || 5 }}分</div>
                         </div>
                     </div>
                 </div>
@@ -217,7 +219,7 @@
             <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl my-8 max-h-[90vh] overflow-y-auto border border-amber-100">
                 <h3 class="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
                     <i data-lucide="plus-circle" class="w-5 h-5 text-rose-500"></i> 
-                    {{ modalType === 'record' ? '新增飲食紀錄' : modalType === 'stats' ? '新增體重數值' : '新增今日 9 大自檢' }}
+                    {{ modalType === 'record' ? '新增飲食紀錄' : modalType === 'stats' ? '新增體重數值' : '新增今日自檢' }}
                 </h3>
 
                 <!-- Form 1: 飲食 -->
@@ -225,11 +227,11 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">日期</label>
-                            <input type="date" v-model="formRecord.date" class="w-full border border-amber-200 rounded-xl p-2.5 text-xs outline-none focus:border-rose-400 bg-amber-50/30" required />
+                            <input type="date" v-model="formRecord.date" class="w-full border border-amber-200 rounded-xl p-2.5 text-xs outline-none bg-amber-50/30" required />
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">用餐時段</label>
-                            <select v-model="formRecord.mealTime" class="w-full border border-amber-200 rounded-xl p-2.5 text-xs outline-none focus:border-rose-400 bg-amber-50/30">
+                            <select v-model="formRecord.mealTime" class="w-full border border-amber-200 rounded-xl p-2.5 text-xs outline-none bg-amber-50/30">
                                 <option value="早餐">早餐</option>
                                 <option value="早午餐">早午餐</option>
                                 <option value="午餐">午餐</option>
@@ -239,7 +241,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-slate-600 mb-1">餐點內容</label>
-                        <input type="text" v-model="formRecord.foodItem" placeholder="例如：健康雞肉餐＋無糖豆漿" class="w-full border border-amber-200 rounded-xl p-2.5 text-xs outline-none focus:border-rose-400 bg-amber-50/30" required />
+                        <input type="text" v-model="formRecord.foodItem" placeholder="例如：健康雞肉餐＋無糖豆漿" class="w-full border border-amber-200 rounded-xl p-2.5 text-xs outline-none bg-amber-50/30" required />
                     </div>
                     <div class="grid grid-cols-3 gap-3 bg-amber-50/50 p-3 rounded-2xl border border-amber-100">
                         <div>
@@ -266,7 +268,7 @@
                         </div>
                     </div>
                     <div class="flex justify-end gap-2 pt-4 border-t border-amber-100">
-                        <button type="button" @click="modalOpen = false" class="px-4 py-2 border border-slate-200 rounded-xl text-slate-600 text-xs font-medium hover:bg-slate-50">取消</button>
+                        <button type="button" @click="modalOpen = false" class="px-4 py-2 border border-slate-200 rounded-xl text-slate-600 text-xs font-medium">取消</button>
                         <button type="submit" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-rose-500 text-white rounded-xl text-xs font-medium shadow-md">確認儲存</button>
                     </div>
                 </form>
@@ -293,45 +295,63 @@
                     </div>
                 </form>
 
-                <!-- Form 3: 自檢表 -->
-                <form v-if="modalType === 'checkin'" @submit.prevent="saveCheckinRecord" class="space-y-4 text-xs">
+                <!-- Form 3: 自檢表 (不帶數字編號) -->
+                <form v-if="modalType === 'checkin'" @submit.prevent="saveCheckinRecord" class="space-y-3 text-xs">
                     <div>
                         <label class="block font-medium text-slate-600 mb-1">日期</label>
                         <input type="date" v-model="formCheckin.date" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" required />
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <label class="flex items-center gap-2 bg-amber-50/50 p-2.5 rounded-xl border border-amber-100">
-                            <input type="checkbox" v-model="formCheckin.diet" class="accent-rose-500 w-4 h-4" /> 1. 飲食達標
-                        </label>
-                        <label class="flex items-center gap-2 bg-amber-50/50 p-2.5 rounded-xl border border-amber-100">
-                            <input type="checkbox" v-model="formCheckin.water" class="accent-rose-500 w-4 h-4" /> 2. 水分達標
-                        </label>
-                        <label class="flex items-center gap-2 bg-purple-50 p-2.5 rounded-xl border border-purple-100">
-                            <input type="checkbox" v-model="formCheckin.evilFood" class="accent-purple-500 w-4 h-4" /> 3. 是否邪惡食物
-                        </label>
-                        <label class="flex items-center gap-2 bg-pink-50 p-2.5 rounded-xl border border-pink-100">
-                            <input type="checkbox" v-model="formCheckin.gathering" class="accent-pink-500 w-4 h-4" /> 4. 是否聚餐
-                        </label>
-                        <label class="flex items-center gap-2 bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
-                            <input type="checkbox" v-model="formCheckin.poop" class="accent-emerald-500 w-4 h-4" /> 8. 便便順暢
-                        </label>
-                        <label class="flex items-center gap-2 bg-cyan-50 p-2.5 rounded-xl border border-cyan-100">
-                            <input type="checkbox" v-model="formCheckin.bloating" class="accent-cyan-500 w-4 h-4" /> 9. 是否水腫
-                        </label>
-                    </div>
-                    <div class="space-y-3 bg-amber-50/30 p-3 rounded-2xl border border-amber-100">
+                    <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block font-bold text-slate-700 mb-1">5. 前一天睡眠時數：{{ formCheckin.sleepHours }} 小時</label>
+                            <label class="block font-medium text-slate-600 mb-1">飲食目標</label>
+                            <input type="text" v-model="formCheckin.dietGoal" placeholder="例如 3/3/4" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                        </div>
+                        <div>
+                            <label class="block font-medium text-slate-600 mb-1">飲食總量</label>
+                            <input type="text" v-model="formCheckin.dietTotal" placeholder="例如 4/2/2" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-600 mb-1">水分 (ml)</label>
+                        <input type="number" v-model.number="formCheckin.waterMl" placeholder="例如 2000" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block font-medium text-slate-600 mb-1">是否邪惡食物</label>
+                            <input type="text" v-model="formCheckin.evilFoodText" placeholder="例如 是（鹹酥雞）" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                        </div>
+                        <div>
+                            <label class="block font-medium text-slate-600 mb-1">是否聚餐</label>
+                            <input type="text" v-model="formCheckin.gatheringText" placeholder="例如 是（爸媽上來）" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                        </div>
+                    </div>
+                    <div class="space-y-2 bg-amber-50/30 p-3 rounded-2xl border border-amber-100">
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">前一天睡眠狀況：{{ formCheckin.sleepHours }} 小時</label>
                             <input type="range" min="3" max="12" step="0.5" v-model.number="formCheckin.sleepHours" class="w-full accent-rose-500" />
                         </div>
                         <div>
-                            <label class="block font-bold text-slate-700 mb-1">6. 壓力狀況 (1-5分)：{{ formCheckin.stress }}分</label>
+                            <label class="block font-bold text-slate-700 mb-1">壓力狀況 (1-5分)：{{ formCheckin.stress }}分</label>
                             <input type="range" min="1" max="5" v-model.number="formCheckin.stress" class="w-full accent-rose-500" />
                         </div>
                         <div>
-                            <label class="block font-bold text-slate-700 mb-1">7. 疲勞狀況 (1-5分)：{{ formCheckin.fatigue }}分</label>
+                            <label class="block font-bold text-slate-700 mb-1">疲勞狀況 (1-5分)：{{ formCheckin.fatigue }}分</label>
                             <input type="range" min="1" max="5" v-model.number="formCheckin.fatigue" class="w-full accent-rose-500" />
                         </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block font-medium text-slate-600 mb-1">便便狀況</label>
+                            <input type="text" v-model="formCheckin.poopStatus" placeholder="例如 1次" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                        </div>
+                        <div>
+                            <label class="block font-medium text-slate-600 mb-1">水腫狀況</label>
+                            <input type="text" v-model="formCheckin.bloatingStatus" placeholder="例如 4分" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-slate-600 mb-1">飽足感狀況 (1-10分)：{{ formCheckin.fullness }}分</label>
+                        <input type="range" min="1" max="10" v-model.number="formCheckin.fullness" class="w-full accent-rose-500" />
                     </div>
                     <div class="flex justify-end gap-2 pt-2">
                         <button type="button" @click="modalOpen = false" class="px-4 py-2 border border-slate-200 rounded-xl text-slate-600 font-medium">取消</button>
@@ -360,13 +380,26 @@
 
                 const formRecord = ref({ date: today, mealTime: '早餐', foodItem: '', carbs: 1, protein: 1, veggies: 1, isCheat: false, isGathering: false });
                 const formWeight = ref({ date: today, weight: '', waist: '' });
-                const formCheckin = ref({ date: today, diet: true, water: true, evilFood: false, gathering: false, sleepHours: 7, stress: 2, fatigue: 2, poop: true, bloating: false });
+                const formCheckin = ref({ 
+                    date: today, 
+                    dietGoal: '3/3/4', 
+                    dietTotal: '4/2/2', 
+                    waterMl: 2000, 
+                    evilFoodText: '無', 
+                    gatheringText: '無', 
+                    sleepHours: 7, 
+                    stress: 2, 
+                    fatigue: 2, 
+                    poopStatus: '1次', 
+                    bloatingStatus: '無',
+                    fullness: 5
+                });
 
                 onMounted(() => {
                     setTimeout(() => lucide.createIcons(), 100);
-                    const r = localStorage.getItem('diet_records_v3');
-                    const w = localStorage.getItem('weight_records_v3');
-                    const c = localStorage.getItem('checkin_records_v3');
+                    const r = localStorage.getItem('diet_records_v4');
+                    const w = localStorage.getItem('weight_records_v4');
+                    const c = localStorage.getItem('checkin_records_v4');
                     if (r) records.value = JSON.parse(r);
                     if (w) weightRecords.value = JSON.parse(w);
                     if (c) checkinRecords.value = JSON.parse(c);
@@ -380,7 +413,7 @@
 
                 const saveRecord = () => {
                     records.value.unshift({ id: Date.now().toString(), ...formRecord.value });
-                    localStorage.setItem('diet_records_v3', JSON.stringify(records.value));
+                    localStorage.setItem('diet_records_v4', JSON.stringify(records.value));
                     modalOpen.value = false;
                     formRecord.value.foodItem = '';
                 };
@@ -388,43 +421,43 @@
                 const deleteRecord = (id) => {
                     if (confirm('確定刪除此筆記錄？')) {
                         records.value = records.value.filter(r => r.id !== id);
-                        localStorage.setItem('diet_records_v3', JSON.stringify(records.value));
+                        localStorage.setItem('diet_records_v4', JSON.stringify(records.value));
                     }
                 };
 
                 const saveWeightRecord = () => {
                     weightRecords.value.unshift({ id: Date.now().toString(), ...formWeight.value });
-                    localStorage.setItem('weight_records_v3', JSON.stringify(weightRecords.value));
+                    localStorage.setItem('weight_records_v4', JSON.stringify(weightRecords.value));
                     modalOpen.value = false;
                 };
 
                 const deleteWeightRecord = (id) => {
                     if (confirm('確定刪除此筆數值？')) {
                         weightRecords.value = weightRecords.value.filter(r => r.id !== id);
-                        localStorage.setItem('weight_records_v3', JSON.stringify(weightRecords.value));
+                        localStorage.setItem('weight_records_v4', JSON.stringify(weightRecords.value));
                     }
                 };
 
                 const saveCheckinRecord = () => {
                     checkinRecords.value.unshift({ id: Date.now().toString(), ...formCheckin.value });
-                    localStorage.setItem('checkin_records_v3', JSON.stringify(checkinRecords.value));
+                    localStorage.setItem('checkin_records_v4', JSON.stringify(checkinRecords.value));
                     modalOpen.value = false;
                 };
 
                 const deleteCheckinRecord = (id) => {
                     if (confirm('確定刪除此筆自檢？')) {
                         checkinRecords.value = checkinRecords.value.filter(r => r.id !== id);
-                        localStorage.setItem('checkin_records_v3', JSON.stringify(checkinRecords.value));
+                        localStorage.setItem('checkin_records_v4', JSON.stringify(checkinRecords.value));
                     }
                 };
 
                 // 統計扣打與聚餐次數
                 const cheatCount = computed(() => {
-                    return records.value.filter(r => r.isCheat).length + checkinRecords.value.filter(c => c.evilFood).length;
+                    return records.value.filter(r => r.isCheat).length + checkinRecords.value.filter(c => c.evilFoodText && c.evilFoodText !== '無').length;
                 });
 
                 const gatheringCount = computed(() => {
-                    return records.value.filter(r => r.isGathering).length + checkinRecords.value.filter(c => c.gathering).length;
+                    return records.value.filter(r => r.isGathering).length + checkinRecords.value.filter(c => c.gatheringText && c.gatheringText !== '無').length;
                 });
 
                 const latestWeight = computed(() => {
@@ -439,14 +472,22 @@
 
                 // 月份對齊統整清單
                 const monthlySummaryList = computed(() => {
-                    // 合併所有填寫過日期的記錄
                     const dateMap = {};
                     checkinRecords.value.forEach(c => {
-                        if (!dateMap[c.date]) dateMap[c.date] = { date: c.date, sleepHours: c.sleepHours, hasCheat: c.evilFood, hasGathering: c.gathering, text: '完成自檢' };
+                        if (!dateMap[c.date]) {
+                            dateMap[c.date] = { 
+                                date: c.date, 
+                                sleepHours: c.sleepHours, 
+                                hasCheat: c.evilFoodText && c.evilFoodText !== '無', 
+                                hasGathering: c.gatheringText && c.gatheringText !== '無', 
+                                text: `自檢完成 (水:${c.waterMl}ml)` 
+                            };
+                        }
                     });
                     records.value.forEach(r => {
-                        if (!dateMap[r.date]) dateMap[r.date] = { date: r.date, sleepHours: 7, hasCheat: r.isCheat, hasGathering: r.isGathering, text: '有飲食紀錄' };
-                        else {
+                        if (!dateMap[r.date]) {
+                            dateMap[r.date] = { date: r.date, sleepHours: 7, hasCheat: r.isCheat, hasGathering: r.isGathering, text: '有飲食紀錄' };
+                        } else {
                             if (r.isCheat) dateMap[r.date].hasCheat = true;
                             if (r.isGathering) dateMap[r.date].hasGathering = true;
                         }
@@ -455,13 +496,11 @@
                     const list = Object.values(dateMap);
                     list.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-                    return list.map(item => {
-                        return {
-                            ...item,
-                            isSleepOk: item.sleepHours >= 7,
-                            summaryText: item.text
-                        };
-                    });
+                    return list.map(item => ({
+                        ...item,
+                        isSleepOk: item.sleepHours >= 7,
+                        summaryText: item.text
+                    }));
                 });
 
                 return {
