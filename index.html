@@ -18,7 +18,7 @@
             <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
                 <div class="flex items-center gap-2">
                     <i data-lucide="utensils" class="w-7 h-7"></i>
-                    <h1 class="text-xl font-bold tracking-wide"飲食體態紀錄</h1>
+                    <h1 class="text-xl font-bold tracking-wide">放縱減肥大師班專屬紀錄</h1>
                 </div>
                 <div class="text-xs bg-emerald-700 px-3 py-1.5 rounded-full flex items-center gap-2">
                     <span>短期目標：每週5天達標</span>
@@ -52,7 +52,7 @@
                         <h2 class="font-bold text-lg text-slate-800">今日飲食與身體狀態</h2>
                         <p class="text-xs text-slate-500">吃東西前先記錄，掌握拳頭與掌心分量！</p>
                     </div>
-                    <button @click="openModal" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow transition active:scale-95">
+                    <button @click="modalOpen = true" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow transition active:scale-95">
                         <i data-lucide="plus" class="w-5 h-5"></i> 新增用餐與數值紀錄
                     </button>
                 </div>
@@ -217,12 +217,8 @@
         </div>
     </div>
 
-    <!-- Firebase & App Script -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+    <!-- App Script -->
+    <script>
         const { createApp, ref, computed, onMounted } = Vue;
 
         createApp({
@@ -230,7 +226,6 @@
                 const activeTab = ref('record');
                 const modalOpen = ref(false);
                 const records = ref([]);
-                const user = ref(null);
 
                 const form = ref({
                     date: new Date().toISOString().split('T')[0],
@@ -250,41 +245,13 @@
                 const presetBreakfast = ['早餐店燻雞蛋餅＋無糖綠茶', '起司火腿貝果拼盤', '超商水煮蛋＋無糖豆漿', '全家烤番薯＋茶葉蛋＋無糖豆漿'];
                 const presetLunchDinner = ['夠健康廚房-健康雞肉餐＋無糖豆漿', '吃好食堂-叉燒飯(飯2/3)', 'Poke(煙燻鮭魚)＋711豆漿', '滷味（三菜一肉＋冬粉，湯不喝）', '八方雲集水餃7顆＋燙青菜', 'Sukiya牛丼(飯少)＋菠菜'];
 
-                let db = null;
-                let userId = 'local-user';
-
-                onMounted(async () => {
+                onMounted(() => {
                     setTimeout(() => lucide.createIcons(), 100);
-
-                    try {
-                        const firebaseConfig = { apiKey: "demo", projectId: "diet-tracker-app" };
-                        const app = initializeApp(firebaseConfig);
-                        const auth = getAuth(app);
-                        db = getFirestore(app);
-                        
-                        const res = await signInAnonymously(auth);
-                        user.value = res.user;
-                        userId = res.user.uid;
-
-                        // Listen to Firestore
-                        const q = collection(db, 'artifacts', 'diet_master_v1', 'users', userId, 'records');
-                        onSnapshot(q, (snapshot) => {
-                            const items = [];
-                            snapshot.forEach(d => items.push({ id: d.id, ...d.data() }));
-                            items.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                            records.value = items;
-                        });
-                    } catch (e) {
-                        console.log("Using local fallback storage");
-                        const saved = localStorage.getItem('diet_records');
-                        if (saved) records.value = JSON.parse(saved);
+                    const saved = localStorage.getItem('diet_records_v2');
+                    if (saved) {
+                        try { records.value = JSON.parse(saved); } catch(e) {}
                     }
                 });
-
-                const openModal = () => {
-                    modalOpen.value = true;
-                    setTimeout(() => lucide.createIcons(), 100);
-                };
 
                 const selectPreset = (time, item) => {
                     form.value.mealTime = time;
@@ -293,27 +260,28 @@
                 };
 
                 const saveRecord = () => {
-    const saveRecord = () => {
-    const newRecord = {
-        ...form.value,
-        id: Date.now().toString(),
-        createdAt: new Date().toISOString()
-    };
-    records.value.unshift(newRecord);
-    localStorage.setItem('diet_records', JSON.stringify(records.value));
-    
-    modalOpen.value = false;
-    form.value.foodItem = '';
-    form.value.weight = '';
-    form.value.waist = '';
-};
+                    const newRecord = {
+                        ...form.value,
+                        id: Date.now().toString(),
+                        createdAt: new Date().toISOString()
+                    };
+                    records.value.unshift(newRecord);
+                    localStorage.setItem('diet_records_v2', JSON.stringify(records.value));
+                    
+                    modalOpen.value = false;
+                    form.value.foodItem = '';
+                    form.value.weight = '';
+                    form.value.waist = '';
+                    setTimeout(() => lucide.createIcons(), 100);
+                };
 
                 const deleteRecord = (id) => {
-    if (confirm('確定要刪除這筆紀錄嗎？')) {
-        records.value = records.value.filter(r => r.id !== id);
-        localStorage.setItem('diet_records', JSON.stringify(records.value));
-    }
-};
+                    if (confirm('確定要刪除這筆紀錄嗎？')) {
+                        records.value = records.value.filter(r => r.id !== id);
+                        localStorage.setItem('diet_records_v2', JSON.stringify(records.value));
+                        setTimeout(() => lucide.createIcons(), 100);
+                    }
+                };
 
                 const latestWeight = computed(() => {
                     const found = records.value.find(r => r.weight);
@@ -328,7 +296,7 @@
                 return {
                     activeTab, modalOpen, records, form,
                     presetBreakfast, presetLunchDinner,
-                    openModal, selectPreset, saveRecord, deleteRecord,
+                    selectPreset, saveRecord, deleteRecord,
                     latestWeight, latestWaist
                 };
             }
