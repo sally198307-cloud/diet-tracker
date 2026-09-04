@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>飲食紀錄與身體數值追蹤</title>
+    <title>飲食及數值紀錄</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Vue 3 -->
@@ -11,34 +11,34 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans">
+<body class="bg-amber-50/50 text-slate-800 font-sans">
     <div id="app" class="min-h-screen pb-20">
-        <!-- Header -->
-        <header class="bg-emerald-600 text-white shadow-md sticky top-0 z-30">
+        <!-- Header (黃粉溫馨配色) -->
+        <header class="bg-gradient-to-r from-pink-400 to-amber-400 text-white shadow-md sticky top-0 z-30">
             <div class="max-w-4xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
                 <div class="flex items-center gap-2">
-                    <i data-lucide="utensils" class="w-7 h-7"></i>
-                    <h1 class="text-xl font-bold tracking-wide">放縱減肥大師班專屬紀錄</h1>
+                    <i data-lucide="heart" class="w-7 h-7 fill-white/20"></i>
+                    <h1 class="text-xl font-bold tracking-wide">飲食及數值紀錄</h1>
                 </div>
-                <div class="text-xs bg-emerald-700 px-3 py-1.5 rounded-full flex items-center gap-2">
-                    <span>短期目標：每週5天達標</span>
-                    <span>|</span>
-                    <span>中期：腰圍-5cm</span>
+                <div class="text-xs bg-white/20 px-3 py-1.5 rounded-full flex items-center gap-3 font-medium">
+                    <span>🔥 扣打：{{ cheatCount }}/3 次</span>
+                    <span>｜</span>
+                    <span>🎉 聚餐：{{ gatheringCount }}/3 次</span>
                 </div>
             </div>
         </header>
 
         <!-- Navigation Tabs -->
         <div class="max-w-4xl mx-auto px-4 mt-4">
-            <div class="flex bg-white rounded-xl shadow-sm p-1 border border-slate-200">
-                <button @click="activeTab = 'record'" :class="activeTab === 'record' ? 'bg-emerald-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100'" class="flex-1 py-2.5 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition">
-                    <i data-lucide="activity" class="w-4 h-4"></i> 飲食與數值紀錄
+            <div class="flex bg-white rounded-xl shadow-sm p-1 border border-pink-100">
+                <button @click="activeTab = 'record'" :class="activeTab === 'record' ? 'bg-pink-500 text-white shadow' : 'text-slate-600 hover:bg-pink-50'" class="flex-1 py-2.5 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition">
+                    <i data-lucide="utensils" class="w-4 h-4"></i> 飲食與數值紀錄
                 </button>
-                <button @click="activeTab = 'stats'" :class="activeTab === 'stats' ? 'bg-emerald-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100'" class="flex-1 py-2.5 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition">
-                    <i data-lucide="scale" class="w-4 h-4"></i> 數據與進度儀表板
+                <button @click="activeTab = 'stats'" :class="activeTab === 'stats' ? 'bg-amber-500 text-white shadow' : 'text-slate-600 hover:bg-amber-50'" class="flex-1 py-2.5 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition">
+                    <i data-lucide="scale" class="w-4 h-4"></i> 體重數值
                 </button>
-                <button @click="activeTab = 'guide'" :class="activeTab === 'guide' ? 'bg-emerald-600 text-white shadow' : 'text-slate-600 hover:bg-slate-100'" class="flex-1 py-2.5 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition">
-                    <i data-lucide="check-square" class="w-4 h-4"></i> 快速外食點餐指南
+                <button @click="activeTab = 'guide'" :class="activeTab === 'guide' ? 'bg-pink-500 text-white shadow' : 'text-slate-600 hover:bg-pink-50'" class="flex-1 py-2.5 text-sm font-medium rounded-lg flex items-center justify-center gap-2 transition">
+                    <i data-lucide="check-square" class="w-4 h-4"></i> 6.自檢表
                 </button>
             </div>
         </div>
@@ -47,42 +47,41 @@
         <main class="max-w-4xl mx-auto px-4 mt-6">
             <!-- Record Tab -->
             <div v-show="activeTab === 'record'" class="space-y-6">
-                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-pink-100">
                     <div>
                         <h2 class="font-bold text-lg text-slate-800">今日飲食與身體狀態</h2>
-                        <p class="text-xs text-slate-500">吃東西前先記錄，掌握拳頭與掌心分量！</p>
+                        <p class="text-xs text-slate-500">吃東西前先記錄，輕鬆管理每週扣打與聚餐！</p>
                     </div>
-                    <button @click="modalOpen = true" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow transition active:scale-95">
-                        <i data-lucide="plus" class="w-5 h-5"></i> 新增用餐與數值紀錄
+                    <button @click="modalOpen = true" class="bg-gradient-to-r from-pink-500 to-amber-500 hover:opacity-90 text-white px-4 py-2.5 rounded-xl font-medium text-sm flex items-center gap-2 shadow transition active:scale-95">
+                        <i data-lucide="plus" class="w-5 h-5"></i> 新增紀錄
                     </button>
                 </div>
 
-                <div v-if="records.length === 0" class="bg-white rounded-xl p-12 text-center border border-slate-200 shadow-sm">
-                    <i data-lucide="utensils" class="w-12 h-12 text-slate-300 mx-auto mb-3"></i>
+                <div v-if="records.length === 0" class="bg-white rounded-xl p-12 text-center border border-pink-100 shadow-sm">
+                    <i data-lucide="heart" class="w-12 h-12 text-pink-300 mx-auto mb-3"></i>
                     <p class="text-slate-600 font-medium">目前還沒有新增任何紀錄</p>
-                    <p class="text-xs text-slate-400 mt-1">點擊上方按鈕開始記錄妳的減脂外食生活吧！</p>
+                    <p class="text-xs text-slate-400 mt-1">點擊上方按鈕開始記錄妳的專屬減脂生活吧！</p>
                 </div>
 
                 <div v-else class="space-y-4">
-                    <div v-for="rec in records" :key="rec.id" class="bg-white rounded-xl p-5 shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between gap-4">
+                    <div v-for="rec in records" :key="rec.id" class="bg-white rounded-xl p-5 shadow-sm border border-pink-100 flex flex-col md:flex-row justify-between gap-4">
                         <div class="space-y-2">
                             <div class="flex items-center gap-2 flex-wrap">
-                                <span class="bg-emerald-100 text-emerald-800 font-bold text-xs px-2.5 py-1 rounded-md">{{ rec.date }}</span>
-                                <span class="bg-indigo-100 text-indigo-800 font-bold text-xs px-2.5 py-1 rounded-md">{{ rec.mealTime }}</span>
-                                <span class="bg-amber-100 text-amber-800 text-xs px-2.5 py-1 rounded-md">{{ rec.scenario }}</span>
+                                <span class="bg-amber-100 text-amber-800 font-bold text-xs px-2.5 py-1 rounded-md">{{ rec.date }}</span>
+                                <span class="bg-pink-100 text-pink-800 font-bold text-xs px-2.5 py-1 rounded-md">{{ rec.mealTime }}</span>
                                 <span v-if="rec.isCheat" class="bg-rose-100 text-rose-700 text-xs px-2.5 py-1 rounded-md font-bold">🔥 扣打餐點</span>
+                                <span v-if="rec.isGathering" class="bg-purple-100 text-purple-700 text-xs px-2.5 py-1 rounded-md font-bold">🎉 聚餐</span>
                             </div>
                             <div class="font-bold text-slate-800 text-base">{{ rec.foodItem }}</div>
-                            <div class="flex gap-4 text-xs text-slate-600 pt-1 flex-wrap">
-                                <span class="bg-slate-100 px-2 py-1 rounded">主食：{{ rec.carbs }} 拳</span>
-                                <span class="bg-slate-100 px-2 py-1 rounded">蛋白質：{{ rec.protein }} 掌心</span>
-                                <span class="bg-slate-100 px-2 py-1 rounded">蔬菜：{{ rec.veggies }} 拳</span>
-                                <span v-if="rec.waterAdd > 0" class="bg-blue-50 text-blue-700 px-2 py-1 rounded">+{{ rec.waterAdd }}ml 水</span>
+                            <div class="flex gap-3 text-xs text-slate-600 pt-1 flex-wrap">
+                                <span class="bg-amber-50 px-2 py-1 rounded text-amber-900">主食：{{ rec.carbs }} 拳</span>
+                                <span class="bg-pink-50 px-2 py-1 rounded text-pink-900">蛋白質：{{ rec.protein }} 掌心</span>
+                                <span class="bg-emerald-50 px-2 py-1 rounded text-emerald-900">蔬菜：{{ rec.veggies }} 拳</span>
                             </div>
-                            <div v-if="rec.weight || rec.waist" class="text-xs text-emerald-700 font-medium pt-1 flex gap-3">
-                                <span v-if="rec.weight">體重: {{ rec.weight }} kg</span>
-                                <span v-if="rec.waist">腰圍: {{ rec.waist }} cm</span>
-                                <span>睡眠: {{ rec.sleepHours }} hr</span>
+                            <div class="text-xs text-slate-500 pt-1 flex gap-3 flex-wrap">
+                                <span v-if="rec.weight">體重: <b>{{ rec.weight }} kg</b></span>
+                                <span v-if="rec.waist">腰圍: <b>{{ rec.waist }} cm</b></span>
+                                <span>睡眠: <b>{{ rec.sleepHours }} 小時</b> <span :class="rec.sleepHours >= 7 ? 'text-emerald-600' : 'text-rose-500'">({{ rec.sleepHours >= 7 ? '達標✓' : '未達標' }})</span></span>
                             </div>
                         </div>
                         <div class="flex md:flex-col justify-end items-end">
@@ -94,123 +93,186 @@
                 </div>
             </div>
 
-            <!-- Stats Tab -->
+            <!-- Stats Tab (體重數值) -->
             <div v-show="activeTab === 'stats'" class="space-y-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-amber-100">
                     <h2 class="font-bold text-lg text-slate-800 mb-2 flex items-center gap-2">
-                        <i data-lucide="trending-down" class="w-5 h-5 text-emerald-600"></i> 身體數值與目標追蹤
+                        <i data-lucide="scale" class="w-5 h-5 text-amber-500"></i> 體重與身體數值專區
                     </h2>
-                    <p class="text-xs text-slate-500 mb-6">定期輸入體重與腰圍，追蹤中期（腰圍-5cm）與長期（腰圍-10cm）目標。</p>
+                    <p class="text-xs text-slate-500 mb-6">持續追蹤妳的體重變化與中期（腰圍-5cm）目標！</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-emerald-50 border border-emerald-100 p-4 rounded-xl text-center">
-                            <div class="text-xs text-emerald-600 font-bold mb-1">最新記錄體重</div>
-                            <div class="text-2xl font-black text-emerald-800">{{ latestWeight }} <span class="text-sm font-normal">kg</span></div>
-                        </div>
-                        <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl text-center">
-                            <div class="text-xs text-indigo-600 font-bold mb-1">最新記錄腰圍</div>
-                            <div class="text-2xl font-black text-indigo-800">{{ latestWaist }} <span class="text-sm font-normal">cm</span></div>
-                            <div class="text-[10px] text-indigo-500 mt-1">目標下降 5cm / 10cm</div>
-                        </div>
                         <div class="bg-amber-50 border border-amber-100 p-4 rounded-xl text-center">
-                            <div class="text-xs text-amber-600 font-bold mb-1">累積記錄餐數</div>
-                            <div class="text-2xl font-black text-amber-800">{{ records.length }} <span class="text-sm font-normal">餐</span></div>
+                            <div class="text-xs text-amber-600 font-bold mb-1">最新記錄體重</div>
+                            <div class="text-2xl font-black text-amber-800">{{ latestWeight }} <span class="text-sm font-normal">kg</span></div>
+                        </div>
+                        <div class="bg-pink-50 border border-pink-100 p-4 rounded-xl text-center">
+                            <div class="text-xs text-pink-600 font-bold mb-1">最新記錄腰圍</div>
+                            <div class="text-2xl font-black text-pink-800">{{ latestWaist }} <span class="text-sm font-normal">cm</span></div>
+                            <div class="text-[10px] text-pink-500 mt-1">目標下降 5cm</div>
+                        </div>
+                        <div class="bg-purple-50 border border-purple-100 p-4 rounded-xl text-center">
+                            <div class="text-xs text-purple-600 font-bold mb-1">累積記錄天數</div>
+                            <div class="text-2xl font-black text-purple-800">{{ records.length }} <span class="text-sm font-normal">筆</span></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Guide Tab -->
+            <!-- Guide Tab (6.自檢表與全月對齊統整) -->
             <div v-show="activeTab === 'guide'" class="space-y-6">
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                    <h2 class="font-bold text-lg text-slate-800 mb-2">💡 放縱減肥外食生存指南速查</h2>
-                    <p class="text-xs text-slate-500 mb-6">點擊下方組合可以直接帶入紀錄中！</p>
-                    <div class="space-y-4">
-                        <div class="border border-slate-200 rounded-xl p-4">
-                            <h3 class="font-bold text-emerald-700 text-sm mb-2">🍳 早餐選擇</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <button v-for="item in presetBreakfast" @click="selectPreset('早餐', item)" class="bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 text-xs px-3 py-2 rounded-lg transition text-left">
-                                    + {{ item }}
-                                </button>
-                            </div>
-                        </div>
-                        <div class="border border-slate-200 rounded-xl p-4">
-                            <h3 class="font-bold text-emerald-700 text-sm mb-2">🍜 午晚餐選擇</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <button v-for="item in presetLunchDinner" @click="selectPreset('晚餐', item)" class="bg-slate-50 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 text-xs px-3 py-2 rounded-lg transition text-left">
-                                    + {{ item }}
-                                </button>
-                            </div>
-                        </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-pink-100">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="font-bold text-lg text-slate-800 flex items-center gap-2">
+                            <i data-lucide="calendar" class="w-5 h-5 text-pink-500"></i> 6. 自檢表與每日統整對齊表
+                        </h2>
+                        <span class="text-xs bg-pink-100 text-pink-800 px-3 py-1 rounded-full font-medium">睡眠建議 > 7小時</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-6">完整對齊整理妳每日的自檢狀態、睡眠與達標狀況：</p>
+
+                    <div v-if="records.length === 0" class="text-center py-8 text-slate-400 text-sm">
+                        尚無任何自檢紀錄，請先至第一頁新增紀錄！
+                    </div>
+
+                    <div v-else class="overflow-x-auto">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead>
+                                <tr class="bg-pink-50 text-pink-900 border-b border-pink-200">
+                                    <th class="p-2.5">日期</th>
+                                    <th class="p-2.5">1.飲食</th>
+                                    <th class="p-2.5">2.水</th>
+                                    <th class="p-2.5">3.邪惡食物</th>
+                                    <th class="p-2.5">4.聚餐</th>
+                                    <th class="p-2.5">5.睡眠狀況</th>
+                                    <th class="p-2.5">6.壓力</th>
+                                    <th class="p-2.5">7.疲勞</th>
+                                    <th class="p-2.5">8.便便</th>
+                                    <th class="p-2.5">9.水腫</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="rec in records" :key="rec.id" class="border-b border-slate-100 hover:bg-pink-50/30">
+                                    <td class="p-2.5 font-bold text-slate-700">{{ rec.date }}</td>
+                                    <td class="p-2.5">{{ rec.selfCheck.diet ? '✓ 正常' : '✕' }}</td>
+                                    <td class="p-2.5">{{ rec.selfCheck.water ? '✓ 充足' : '✕' }}</td>
+                                    <td class="p-2.5"><span :class="rec.selfCheck.evilFood ? 'text-rose-600 font-bold' : ''">{{ rec.selfCheck.evilFood ? '有' : '無' }}</span></td>
+                                    <td class="p-2.5"><span :class="rec.selfCheck.gathering ? 'text-purple-600 font-bold' : ''">{{ rec.selfCheck.gathering ? '有' : '無' }}</span></td>
+                                    <td class="p-2.5">
+                                        {{ rec.sleepHours }}hr 
+                                        <span :class="rec.sleepHours >= 7 ? 'text-emerald-600 font-bold' : 'text-rose-500'">
+                                            ({{ rec.sleepHours >= 7 ? '達標' : '未達' }})
+                                        </span>
+                                    </td>
+                                    <td class="p-2.5">{{ rec.selfCheck.stress }}</td>
+                                    <td class="p-2.5">{{ rec.selfCheck.fatigue }}</td>
+                                    <td class="p-2.5">{{ rec.selfCheck.poop ? '順暢' : '不順' }}</td>
+                                    <td class="p-2.5">{{ rec.selfCheck.bloating ? '有水腫' : '無' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Modal -->
+        <!-- Modal (新增紀錄彈窗) -->
         <div v-if="modalOpen" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-            <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl my-8 max-h-[90vh] overflow-y-auto">
-                <h3 class="font-bold text-lg text-slate-800 mb-4">新增飲食與身體數值記錄</h3>
+            <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl my-8 max-h-[90vh] overflow-y-auto border border-pink-100">
+                <h3 class="font-bold text-lg text-slate-800 mb-4 flex items-center gap-2">
+                    <i data-lucide="plus-circle" class="w-5 h-5 text-pink-500"></i> 新增飲食與身體狀態紀錄
+                </h3>
                 <form @submit.prevent="saveRecord" class="space-y-4">
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">日期</label>
-                            <input type="date" v-model="form.date" class="w-full border border-slate-300 rounded-lg p-2 text-sm outline-none" required />
+                            <input type="date" v-model="form.date" class="w-full border border-pink-200 rounded-lg p-2 text-sm outline-none focus:border-pink-500" required />
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">用餐時段</label>
-                            <select v-model="form.mealTime" class="w-full border border-slate-300 rounded-lg p-2 text-sm outline-none">
-                                <option value="早餐">早餐 (10:00)</option>
-                                <option value="午餐">午餐 (12:10)</option>
-                                <option value="晚餐">晚餐 (19:00)</option>
-                                <option value="訓練前餐">訓練前餐 (17:30)</option>
-                                <option value="早午餐">假日早午餐 (13:30)</option>
+                            <select v-model="form.mealTime" class="w-full border border-pink-200 rounded-lg p-2 text-sm outline-none focus:border-pink-500">
+                                <option value="早餐">早餐</option>
+                                <option value="早午餐">早午餐</option>
+                                <option value="午餐">午餐</option>
+                                <option value="晚餐">晚餐</option>
                             </select>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">情境模式</label>
-                        <select v-model="form.scenario" class="w-full border border-slate-300 rounded-lg p-2 text-sm outline-none">
-                            <option value="平日一般">平日一般計畫</option>
-                            <option value="突發狀況">突發忙碌/趕時間狀況</option>
-                            <option value="運動日">運動日/練球日</option>
-                            <option value="假日">假日放鬆模式</option>
-                        </select>
+                        <label class="block text-xs font-medium text-slate-600 mb-1">吃什麼？ (餐點名稱)</label>
+                        <input type="text" v-model="form.foodItem" placeholder="例如：健康雞肉餐＋無糖豆漿" class="w-full border border-pink-200 rounded-lg p-2 text-sm outline-none focus:border-pink-500" required />
                     </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-600 mb-1">預計吃什麼？ (餐點組合)</label>
-                        <input type="text" v-model="form.foodItem" placeholder="例如：夠健康廚房-健康雞肉餐＋無糖豆漿" class="w-full border border-slate-300 rounded-lg p-2 text-sm outline-none" required />
-                    </div>
-                    <div class="grid grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    
+                    <div class="grid grid-cols-3 gap-3 bg-pink-50/50 p-3 rounded-xl border border-pink-100">
                         <div>
                             <label class="block text-[11px] font-bold text-slate-700 mb-1">主食 (拳頭)</label>
-                            <input type="number" step="0.5" min="0" max="5" v-model.number="form.carbs" class="w-full border border-slate-300 rounded-lg p-1.5 text-sm bg-white" />
+                            <input type="number" step="0.5" min="0" max="5" v-model.number="form.carbs" class="w-full border border-pink-200 rounded-lg p-1.5 text-sm bg-white" />
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-slate-700 mb-1">蛋白質 (掌心)</label>
-                            <input type="number" step="0.5" min="0" max="5" v-model.number="form.protein" class="w-full border border-slate-300 rounded-lg p-1.5 text-sm bg-white" />
+                            <input type="number" step="0.5" min="0" max="5" v-model.number="form.protein" class="w-full border border-pink-200 rounded-lg p-1.5 text-sm bg-white" />
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-slate-700 mb-1">蔬菜 (拳頭)</label>
-                            <input type="number" step="0.5" min="0" max="5" v-model.number="form.veggies" class="w-full border border-slate-300 rounded-lg p-1.5 text-sm bg-white" />
+                            <input type="number" step="0.5" min="0" max="5" v-model.number="form.veggies" class="w-full border border-pink-200 rounded-lg p-1.5 text-sm bg-white" />
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
+
+                    <div class="grid grid-cols-3 gap-3">
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">體重 (kg)</label>
-                            <input type="number" step="0.1" placeholder="選填，例如 65.5" v-model.number="form.weight" class="w-full border border-slate-300 rounded-lg p-2 text-sm outline-none" />
+                            <input type="number" step="0.1" placeholder="選填" v-model.number="form.weight" class="w-full border border-pink-200 rounded-lg p-2 text-sm outline-none" />
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">腰圍 (cm)</label>
-                            <input type="number" step="0.1" placeholder="選填，例如 78" v-model.number="form.waist" class="w-full border border-slate-300 rounded-lg p-2 text-sm outline-none" />
+                            <input type="number" step="0.1" placeholder="選填" v-model.number="form.waist" class="w-full border border-pink-200 rounded-lg p-2 text-sm outline-none" />
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">睡眠 (小時)</label>
+                            <input type="number" step="0.5" v-model.number="form.sleepHours" class="w-full border border-pink-200 rounded-lg p-2 text-sm outline-none" />
                         </div>
                     </div>
-                    <div class="flex items-center gap-2 pt-2">
-                        <input type="checkbox" id="cheat" v-model="form.isCheat" class="w-4 h-4 text-emerald-600 rounded" />
-                        <label for="cheat" class="text-xs font-medium text-slate-700">這是一次「扣打/聚餐」邪惡食物餐點</label>
+
+                    <!-- 扣打與聚餐勾選 -->
+                    <div class="flex gap-4 pt-1">
+                        <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
+                            <input type="checkbox" v-model="form.isCheat" class="w-4 h-4 text-pink-500 rounded" />
+                            🔥 算一次扣打
+                        </label>
+                        <label class="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer">
+                            <input type="checkbox" v-model="form.isGathering" class="w-4 h-4 text-purple-500 rounded" />
+                            🎉 算一次聚餐
+                        </label>
                     </div>
-                    <div class="flex justify-end gap-2 pt-4 border-t border-slate-100">
+
+                    <!-- 6. 自檢表細項勾選 -->
+                    <div class="bg-amber-50/50 p-3 rounded-xl border border-amber-100 space-y-2">
+                        <div class="text-xs font-bold text-amber-900 mb-1">📋 6. 自檢表細項</div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <label class="flex items-center gap-1.5"><input type="checkbox" v-model="form.selfCheck.diet" class="rounded text-pink-500"> 1. 飲食正常</label>
+                            <label class="flex items-center gap-1.5"><input type="checkbox" v-model="form.selfCheck.water" class="rounded text-pink-500"> 2. 水分充足</label>
+                            <label class="flex items-center gap-1.5"><input type="checkbox" v-model="form.selfCheck.evilFood" class="rounded text-pink-500"> 3. 邪惡食物</label>
+                            <label class="flex items-center gap-1.5"><input type="checkbox" v-model="form.selfCheck.gathering" class="rounded text-pink-500"> 4. 有聚餐</label>
+                            <label class="flex items-center gap-1.5"><input type="checkbox" v-model="form.selfCheck.poop" class="rounded text-pink-500"> 8. 排便順暢</label>
+                            <label class="flex items-center gap-1.5"><input type="checkbox" v-model="form.selfCheck.bloating" class="rounded text-pink-500"> 9. 水腫狀況</label>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1 text-xs">
+                            <div>
+                                <span class="text-[11px] text-slate-600">6.壓力 (1-5)：</span>
+                                <select v-model.number="form.selfCheck.stress" class="w-full border rounded p-1 bg-white text-xs">
+                                    <option v-for="n in 5" :value="n">{{ n }}</option>
+                                </select>
+                            </div>
+                            <div>
+                                <span class="text-[11px] text-slate-600">7.疲勞 (1-5)：</span>
+                                <select v-model.number="form.selfCheck.fatigue" class="w-full border rounded p-1 bg-white text-xs">
+                                    <option v-for="n in 5" :value="n">{{ n }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-4 border-t border-pink-100">
                         <button type="button" @click="modalOpen = false" class="px-4 py-2 border border-slate-300 rounded-xl text-slate-600 text-sm font-medium hover:bg-slate-50">取消</button>
-                        <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-sm font-medium shadow">確認儲存紀錄</button>
+                        <button type="submit" class="px-4 py-2 bg-gradient-to-r from-pink-500 to-amber-500 text-white rounded-xl text-sm font-medium shadow">確認儲存紀錄</button>
                     </div>
                 </form>
             </div>
@@ -219,7 +281,7 @@
 
     <!-- App Script -->
     <script>
-        const { createApp, ref, computed, onMounted } = Vue;
+        const { createApp, ref, computed, onMounted, watch } = Vue;
 
         createApp({
             setup() {
@@ -230,34 +292,43 @@
                 const form = ref({
                     date: new Date().toISOString().split('T')[0],
                     mealTime: '早餐',
-                    scenario: '平日一般',
                     foodItem: '',
                     carbs: 1,
                     protein: 1,
                     veggies: 0,
-                    waterAdd: 0,
                     isCheat: false,
+                    isGathering: false,
                     weight: '',
                     waist: '',
-                    sleepHours: 7
+                    sleepHours: 7.5,
+                    selfCheck: {
+                        diet: true,
+                        water: true,
+                        evilFood: false,
+                        gathering: false,
+                        sleepOk: true,
+                        stress: 2,
+                        fatigue: 2,
+                        poop: true,
+                        bloating: false
+                    }
                 });
-
-                const presetBreakfast = ['早餐店燻雞蛋餅＋無糖綠茶', '起司火腿貝果拼盤', '超商水煮蛋＋無糖豆漿', '全家烤番薯＋茶葉蛋＋無糖豆漿'];
-                const presetLunchDinner = ['夠健康廚房-健康雞肉餐＋無糖豆漿', '吃好食堂-叉燒飯(飯2/3)', 'Poke(煙燻鮭魚)＋711豆漿', '滷味（三菜一肉＋冬粉，湯不喝）', '八方雲集水餃7顆＋燙青菜', 'Sukiya牛丼(飯少)＋菠菜'];
 
                 onMounted(() => {
                     setTimeout(() => lucide.createIcons(), 100);
-                    const saved = localStorage.getItem('diet_records_v2');
+                    const saved = localStorage.getItem('diet_records_v3');
                     if (saved) {
                         try { records.value = JSON.parse(saved); } catch(e) {}
                     }
                 });
 
-                const selectPreset = (time, item) => {
-                    form.value.mealTime = time;
-                    form.value.foodItem = item;
-                    modalOpen.value = true;
-                };
+                // 同步聚餐勾選狀態
+                watch(() => form.value.isGathering, (val) => {
+                    form.value.selfCheck.gathering = val;
+                });
+                watch(() => form.value.isCheat, (val) => {
+                    form.value.selfCheck.evilFood = val;
+                });
 
                 const saveRecord = () => {
                     const newRecord = {
@@ -266,22 +337,28 @@
                         createdAt: new Date().toISOString()
                     };
                     records.value.unshift(newRecord);
-                    localStorage.setItem('diet_records_v2', JSON.stringify(records.value));
+                    localStorage.setItem('diet_records_v3', JSON.stringify(records.value));
                     
                     modalOpen.value = false;
                     form.value.foodItem = '';
-                    form.value.weight = '';
-                    form.value.waist = '';
                     setTimeout(() => lucide.createIcons(), 100);
                 };
 
                 const deleteRecord = (id) => {
                     if (confirm('確定要刪除這筆紀錄嗎？')) {
                         records.value = records.value.filter(r => r.id !== id);
-                        localStorage.setItem('diet_records_v2', JSON.stringify(records.value));
+                        localStorage.setItem('diet_records_v3', JSON.stringify(records.value));
                         setTimeout(() => lucide.createIcons(), 100);
                     }
                 };
+
+                const cheatCount = computed(() => {
+                    return records.value.filter(r => r.isCheat).length;
+                });
+
+                const gatheringCount = computed(() => {
+                    return records.value.filter(r => r.isGathering).length;
+                });
 
                 const latestWeight = computed(() => {
                     const found = records.value.find(r => r.weight);
@@ -295,8 +372,8 @@
 
                 return {
                     activeTab, modalOpen, records, form,
-                    presetBreakfast, presetLunchDinner,
-                    selectPreset, saveRecord, deleteRecord,
+                    cheatCount, gatheringCount,
+                    saveRecord, deleteRecord,
                     latestWeight, latestWaist
                 };
             }
