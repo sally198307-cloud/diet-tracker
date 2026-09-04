@@ -292,28 +292,20 @@
                     modalOpen.value = true;
                 };
 
-                const saveRecord = async () => {
-                    const newRecord = {
-                        ...form.value,
-                        createdAt: new Date().toISOString()
-                    };
-
-                    try {
-                        if (db && userId) {
-                            await addDoc(collection(db, 'artifacts', 'diet_master_v1', 'users', userId, 'records'), newRecord);
-                        } else {
-                            records.value.unshift({ id: Date.now().toString(), ...newRecord });
-                            localStorage.setItem('diet_records', JSON.stringify(records.value));
-                        }
-                    } catch (err) {
-                        console.error(err);
-                    }
-
-                    modalOpen.value = false;
-                    form.value.foodItem = '';
-                    form.value.weight = '';
-                    form.value.waist = '';
-                };
+                const saveRecord = () => {
+    const newRecord = {
+        ...form.value,
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString()
+    };
+    records.value.unshift(newRecord);
+    localStorage.setItem('diet_records', JSON.stringify(records.value));
+    
+    modalOpen.value = false;
+    form.value.foodItem = '';
+    form.value.weight = '';
+    form.value.waist = '';
+};
 
                 const deleteRecord = async (id) => {
                     if (confirm('確定要刪除這筆紀錄嗎？')) {
