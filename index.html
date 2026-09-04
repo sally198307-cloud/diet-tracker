@@ -306,7 +306,7 @@
                     
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block font-medium text-slate-600 mb-1">飲食目標 (固定)</label>
+                            <label class="block font-medium text-slate-600 mb-1">飲食目標</label>
                             <input type="text" value="3/4/4" disabled class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-slate-100 text-slate-500 font-bold" />
                         </div>
                         <div>
@@ -323,11 +323,22 @@
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block font-medium text-slate-600 mb-1">是否邪惡食物</label>
-                            <input type="text" v-model="formCheckin.evilFoodText" placeholder="例如 是（鹹酥雞）" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                            <select v-model="formCheckin.evilFoodText" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30">
+                                <option value="無">無</option>
+                                <option value="是（鹹酥雞）">是（鹹酥雞）</option>
+                                <option value="是（手搖飲/甜點）">是（手搖飲/甜點）</option>
+                                <option value="是（炸物/速食）">是（炸物/速食）</option>
+                                <option value="是（其他）">是（其他）</option>
+                            </select>
                         </div>
                         <div>
                             <label class="block font-medium text-slate-600 mb-1">是否聚餐</label>
-                            <input type="text" v-model="formCheckin.gatheringText" placeholder="例如 是（爸媽上來）" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                            <select v-model="formCheckin.gatheringText" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30">
+                                <option value="無">無</option>
+                                <option value="是（家人聚餐）">是（家人聚餐）</option>
+                                <option value="是（朋友聚餐）">是（朋友聚餐）</option>
+                                <option value="是（工作聚餐）">是（工作聚餐）</option>
+                            </select>
                         </div>
                     </div>
 
@@ -352,9 +363,9 @@
                             <input type="text" v-model="formCheckin.poopStatus" placeholder="例如 1次" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
                         </div>
                         <div>
-                            <label class="block font-medium text-slate-600 mb-1">水腫狀況 (下拉式選單)</label>
+                            <label class="block font-medium text-slate-600 mb-1">水腫狀況</label>
                             <select v-model="formCheckin.bloatingStatus" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30">
-                                <option value="無">無水腫</option>
+                                <option value="無水腫">無水腫</option>
                                 <option value="輕微水腫">輕微水腫</option>
                                 <option value="中度水腫">中度水腫</option>
                                 <option value="嚴重水腫">嚴重水腫</option>
@@ -409,16 +420,16 @@
                     stress: 5, 
                     fatigue: 5, 
                     poopStatus: '1次', 
-                    bloatingStatus: '無',
+                    bloatingStatus: '無水腫',
                     fullness: 5,
                     note: ''
                 });
 
                 onMounted(() => {
                     setTimeout(() => lucide.createIcons(), 100);
-                    const r = localStorage.getItem('diet_records_v5');
-                    const w = localStorage.getItem('weight_records_v5');
-                    const c = localStorage.getItem('checkin_records_v5');
+                    const r = localStorage.getItem('diet_records_v6');
+                    const w = localStorage.getItem('weight_records_v6');
+                    const c = localStorage.getItem('checkin_records_v6');
                     if (r) records.value = JSON.parse(r);
                     if (w) weightRecords.value = JSON.parse(w);
                     if (c) checkinRecords.value = JSON.parse(c);
@@ -432,7 +443,7 @@
 
                 const saveRecord = () => {
                     records.value.unshift({ id: Date.now().toString(), ...formRecord.value });
-                    localStorage.setItem('diet_records_v5', JSON.stringify(records.value));
+                    localStorage.setItem('diet_records_v6', JSON.stringify(records.value));
                     modalOpen.value = false;
                     formRecord.value.foodItem = '';
                 };
@@ -440,33 +451,33 @@
                 const deleteRecord = (id) => {
                     if (confirm('確定刪除此筆記錄？')) {
                         records.value = records.value.filter(r => r.id !== id);
-                        localStorage.setItem('diet_records_v5', JSON.stringify(records.value));
+                        localStorage.setItem('diet_records_v6', JSON.stringify(records.value));
                     }
                 };
 
                 const saveWeightRecord = () => {
                     weightRecords.value.unshift({ id: Date.now().toString(), ...formWeight.value });
-                    localStorage.setItem('weight_records_v5', JSON.stringify(weightRecords.value));
+                    localStorage.setItem('weight_records_v6', JSON.stringify(weightRecords.value));
                     modalOpen.value = false;
                 };
 
                 const deleteWeightRecord = (id) => {
                     if (confirm('確定刪除此筆數值？')) {
                         weightRecords.value = weightRecords.value.filter(r => r.id !== id);
-                        localStorage.setItem('weight_records_v5', JSON.stringify(weightRecords.value));
+                        localStorage.setItem('weight_records_v6', JSON.stringify(weightRecords.value));
                     }
                 };
 
                 const saveCheckinRecord = () => {
                     checkinRecords.value.unshift({ id: Date.now().toString(), ...formCheckin.value });
-                    localStorage.setItem('checkin_records_v5', JSON.stringify(checkinRecords.value));
+                    localStorage.setItem('checkin_records_v6', JSON.stringify(checkinRecords.value));
                     modalOpen.value = false;
                 };
 
                 const deleteCheckinRecord = (id) => {
                     if (confirm('確定刪除此筆自檢？')) {
                         checkinRecords.value = checkinRecords.value.filter(r => r.id !== id);
-                        localStorage.setItem('checkin_records_v5', JSON.stringify(checkinRecords.value));
+                        localStorage.setItem('checkin_records_v6', JSON.stringify(checkinRecords.value));
                     }
                 };
 
