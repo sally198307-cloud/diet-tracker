@@ -308,20 +308,12 @@
     form.value.waist = '';
 };
 
-                const deleteRecord = async (id) => {
-                    if (confirm('確定要刪除這筆紀錄嗎？')) {
-                        try {
-                            if (db && userId) {
-                                await deleteDoc(doc(db, 'artifacts', 'diet_master_v1', 'users', userId, 'records', id));
-                            } else {
-                                records.value = records.value.filter(r => r.id !== id);
-                                localStorage.setItem('diet_records', JSON.stringify(records.value));
-                            }
-                        } catch (err) {
-                            console.error(err);
-                        }
-                    }
-                };
+                const deleteRecord = (id) => {
+    if (confirm('確定要刪除這筆紀錄嗎？')) {
+        records.value = records.value.filter(r => r.id !== id);
+        localStorage.setItem('diet_records', JSON.stringify(records.value));
+    }
+};
 
                 const latestWeight = computed(() => {
                     const found = records.value.find(r => r.weight);
