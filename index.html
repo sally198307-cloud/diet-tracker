@@ -151,18 +151,20 @@
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
-                        <!-- 仿照妳提供的乾淨呈現格式 -->
                         <div class="text-xs space-y-2 text-slate-700 leading-relaxed font-medium">
-                            <div>飲食：目標 {{ chk.dietGoal || '3/3/4' }}；總量: {{ chk.dietTotal || '4/2/2' }}</div>
+                            <div>飲食：目標 3/4/4 ；總量: {{ chk.dietTotal || '4/2/2' }}</div>
                             <div>水：{{ chk.waterMl || 2000 }} ml</div>
-                            <div>是否邪惡食物：{{ chk.evilFoodText || (chk.evilFood ? '是' : '否') }}</div>
-                            <div>是否聚餐：{{ chk.gatheringText || (chk.gathering ? '是' : '否') }}</div>
+                            <div>是否邪惡食物：{{ chk.evilFoodText }}</div>
+                            <div>是否聚餐：{{ chk.gatheringText }}</div>
                             <div>前一天睡眠狀況：{{ chk.sleepHours }} 小時</div>
                             <div>壓力狀況：{{ chk.stress }}分</div>
                             <div>疲勞狀況：{{ chk.fatigue }}分</div>
-                            <div>便便狀況：{{ chk.poopStatus || '1次' }}</div>
-                            <div>水腫狀況：{{ chk.bloatingStatus || '無' }}</div>
-                            <div>飽足感狀況：{{ chk.fullness || 5 }}分</div>
+                            <div>便便狀況：{{ chk.poopStatus }}</div>
+                            <div>水腫狀況：{{ chk.bloatingStatus }}</div>
+                            <div>飽足感狀況：{{ chk.fullness }}分</div>
+                            <div v-if="chk.note" class="text-amber-800 bg-amber-50 p-2 rounded-xl border border-amber-100 mt-2">
+                                📝 備註：{{ chk.note }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -295,26 +297,29 @@
                     </div>
                 </form>
 
-                <!-- Form 3: 自檢表 (不帶數字編號) -->
+                <!-- Form 3: 自檢表 -->
                 <form v-if="modalType === 'checkin'" @submit.prevent="saveCheckinRecord" class="space-y-3 text-xs">
                     <div>
                         <label class="block font-medium text-slate-600 mb-1">日期</label>
                         <input type="date" v-model="formCheckin.date" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" required />
                     </div>
+                    
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block font-medium text-slate-600 mb-1">飲食目標</label>
-                            <input type="text" v-model="formCheckin.dietGoal" placeholder="例如 3/3/4" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                            <label class="block font-medium text-slate-600 mb-1">飲食目標 (固定)</label>
+                            <input type="text" value="3/4/4" disabled class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-slate-100 text-slate-500 font-bold" />
                         </div>
                         <div>
                             <label class="block font-medium text-slate-600 mb-1">飲食總量</label>
                             <input type="text" v-model="formCheckin.dietTotal" placeholder="例如 4/2/2" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
                         </div>
                     </div>
+
                     <div>
                         <label class="block font-medium text-slate-600 mb-1">水分 (ml)</label>
                         <input type="number" v-model.number="formCheckin.waterMl" placeholder="例如 2000" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
                     </div>
+
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block font-medium text-slate-600 mb-1">是否邪惡食物</label>
@@ -325,34 +330,48 @@
                             <input type="text" v-model="formCheckin.gatheringText" placeholder="例如 是（爸媽上來）" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
                         </div>
                     </div>
-                    <div class="space-y-2 bg-amber-50/30 p-3 rounded-2xl border border-amber-100">
+
+                    <div class="space-y-3 bg-amber-50/30 p-3 rounded-2xl border border-amber-100">
                         <div>
                             <label class="block font-bold text-slate-700 mb-1">前一天睡眠狀況：{{ formCheckin.sleepHours }} 小時</label>
                             <input type="range" min="3" max="12" step="0.5" v-model.number="formCheckin.sleepHours" class="w-full accent-rose-500" />
                         </div>
                         <div>
-                            <label class="block font-bold text-slate-700 mb-1">壓力狀況 (1-5分)：{{ formCheckin.stress }}分</label>
-                            <input type="range" min="1" max="5" v-model.number="formCheckin.stress" class="w-full accent-rose-500" />
+                            <label class="block font-bold text-slate-700 mb-1">壓力狀況 (1-10分)：{{ formCheckin.stress }}分</label>
+                            <input type="range" min="1" max="10" step="1" v-model.number="formCheckin.stress" class="w-full accent-rose-500" />
                         </div>
                         <div>
-                            <label class="block font-bold text-slate-700 mb-1">疲勞狀況 (1-5分)：{{ formCheckin.fatigue }}分</label>
-                            <input type="range" min="1" max="5" v-model.number="formCheckin.fatigue" class="w-full accent-rose-500" />
+                            <label class="block font-bold text-slate-700 mb-1">疲勞狀況 (1-10分)：{{ formCheckin.fatigue }}分</label>
+                            <input type="range" min="1" max="10" step="1" v-model.number="formCheckin.fatigue" class="w-full accent-rose-500" />
                         </div>
                     </div>
+
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block font-medium text-slate-600 mb-1">便便狀況</label>
                             <input type="text" v-model="formCheckin.poopStatus" placeholder="例如 1次" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
                         </div>
                         <div>
-                            <label class="block font-medium text-slate-600 mb-1">水腫狀況</label>
-                            <input type="text" v-model="formCheckin.bloatingStatus" placeholder="例如 4分" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30" />
+                            <label class="block font-medium text-slate-600 mb-1">水腫狀況 (下拉式選單)</label>
+                            <select v-model="formCheckin.bloatingStatus" class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30">
+                                <option value="無">無水腫</option>
+                                <option value="輕微水腫">輕微水腫</option>
+                                <option value="中度水腫">中度水腫</option>
+                                <option value="嚴重水腫">嚴重水腫</option>
+                            </select>
                         </div>
                     </div>
+
                     <div>
                         <label class="block font-medium text-slate-600 mb-1">飽足感狀況 (1-10分)：{{ formCheckin.fullness }}分</label>
                         <input type="range" min="1" max="10" v-model.number="formCheckin.fullness" class="w-full accent-rose-500" />
                     </div>
+
+                    <div>
+                        <label class="block font-medium text-slate-600 mb-1">備註事項</label>
+                        <textarea v-model="formCheckin.note" placeholder="寫下任何想記錄的狀況或心得..." class="w-full border border-amber-200 rounded-xl p-2.5 outline-none bg-amber-50/30 h-16 resize-none"></textarea>
+                    </div>
+
                     <div class="flex justify-end gap-2 pt-2">
                         <button type="button" @click="modalOpen = false" class="px-4 py-2 border border-slate-200 rounded-xl text-slate-600 font-medium">取消</button>
                         <button type="submit" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-rose-500 text-white rounded-xl font-medium shadow-md">確認儲存</button>
@@ -382,24 +401,24 @@
                 const formWeight = ref({ date: today, weight: '', waist: '' });
                 const formCheckin = ref({ 
                     date: today, 
-                    dietGoal: '3/3/4', 
                     dietTotal: '4/2/2', 
                     waterMl: 2000, 
                     evilFoodText: '無', 
                     gatheringText: '無', 
                     sleepHours: 7, 
-                    stress: 2, 
-                    fatigue: 2, 
+                    stress: 5, 
+                    fatigue: 5, 
                     poopStatus: '1次', 
                     bloatingStatus: '無',
-                    fullness: 5
+                    fullness: 5,
+                    note: ''
                 });
 
                 onMounted(() => {
                     setTimeout(() => lucide.createIcons(), 100);
-                    const r = localStorage.getItem('diet_records_v4');
-                    const w = localStorage.getItem('weight_records_v4');
-                    const c = localStorage.getItem('checkin_records_v4');
+                    const r = localStorage.getItem('diet_records_v5');
+                    const w = localStorage.getItem('weight_records_v5');
+                    const c = localStorage.getItem('checkin_records_v5');
                     if (r) records.value = JSON.parse(r);
                     if (w) weightRecords.value = JSON.parse(w);
                     if (c) checkinRecords.value = JSON.parse(c);
@@ -413,7 +432,7 @@
 
                 const saveRecord = () => {
                     records.value.unshift({ id: Date.now().toString(), ...formRecord.value });
-                    localStorage.setItem('diet_records_v4', JSON.stringify(records.value));
+                    localStorage.setItem('diet_records_v5', JSON.stringify(records.value));
                     modalOpen.value = false;
                     formRecord.value.foodItem = '';
                 };
@@ -421,37 +440,36 @@
                 const deleteRecord = (id) => {
                     if (confirm('確定刪除此筆記錄？')) {
                         records.value = records.value.filter(r => r.id !== id);
-                        localStorage.setItem('diet_records_v4', JSON.stringify(records.value));
+                        localStorage.setItem('diet_records_v5', JSON.stringify(records.value));
                     }
                 };
 
                 const saveWeightRecord = () => {
                     weightRecords.value.unshift({ id: Date.now().toString(), ...formWeight.value });
-                    localStorage.setItem('weight_records_v4', JSON.stringify(weightRecords.value));
+                    localStorage.setItem('weight_records_v5', JSON.stringify(weightRecords.value));
                     modalOpen.value = false;
                 };
 
                 const deleteWeightRecord = (id) => {
                     if (confirm('確定刪除此筆數值？')) {
                         weightRecords.value = weightRecords.value.filter(r => r.id !== id);
-                        localStorage.setItem('weight_records_v4', JSON.stringify(weightRecords.value));
+                        localStorage.setItem('weight_records_v5', JSON.stringify(weightRecords.value));
                     }
                 };
 
                 const saveCheckinRecord = () => {
                     checkinRecords.value.unshift({ id: Date.now().toString(), ...formCheckin.value });
-                    localStorage.setItem('checkin_records_v4', JSON.stringify(checkinRecords.value));
+                    localStorage.setItem('checkin_records_v5', JSON.stringify(checkinRecords.value));
                     modalOpen.value = false;
                 };
 
                 const deleteCheckinRecord = (id) => {
                     if (confirm('確定刪除此筆自檢？')) {
                         checkinRecords.value = checkinRecords.value.filter(r => r.id !== id);
-                        localStorage.setItem('checkin_records_v4', JSON.stringify(checkinRecords.value));
+                        localStorage.setItem('checkin_records_v5', JSON.stringify(checkinRecords.value));
                     }
                 };
 
-                // 統計扣打與聚餐次數
                 const cheatCount = computed(() => {
                     return records.value.filter(r => r.isCheat).length + checkinRecords.value.filter(c => c.evilFoodText && c.evilFoodText !== '無').length;
                 });
@@ -470,7 +488,6 @@
                     return found ? found.waist : '--';
                 });
 
-                // 月份對齊統整清單
                 const monthlySummaryList = computed(() => {
                     const dateMap = {};
                     checkinRecords.value.forEach(c => {
